@@ -131,12 +131,26 @@ class DatabaseHelper {
     await db.insert('produto', produto.toMap());
   }
 
-  Future<void> deleteProdutos() async {
+  Future<void> deleteProdutos(void Function(String) logCallback) async {
     final db = await database;
     await db.transaction((txn) async {
-      await txn.delete('produto');
-      await txn.delete('prod_subgrupo');
-      await txn.delete('prod_grupo');
+      try {
+        logCallback("Deletando produtos...");
+        await txn.delete('produto');
+        logCallback("Produtos deletados com sucesso!");
+
+        logCallback("Deletando subgrupos...");
+        await txn.delete('prod_subgrupo');
+        logCallback("Subgrupos deletados com sucesso!");
+
+        logCallback("Deletando grupos...");
+        await txn.delete('prod_grupo');
+        logCallback("Grupos deletados com sucesso!");
+      } catch (e, st) {
+        logCallback("Erro ao deletar: $e");
+        logCallback("Stacktrace: $st");
+        rethrow; // opcional, se quiser propagar o erro
+      }
     });
   }
 }
