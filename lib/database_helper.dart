@@ -155,4 +155,15 @@ class DatabaseHelper {
       }
     });
   }
+
+  Future<void> deleteProdutosWindows(void Function(String) logCallback) async {
+    final db = await database;
+    try {
+      await db.delete('produto');
+      logCallback("produtos deletados com sucesso!");
+    } catch (e, st) {
+      logCallback("Erro ao deletar: $e");
+      logCallback("Stacktrace: $st");
+    }
+  }
 }
