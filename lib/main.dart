@@ -190,6 +190,28 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     style: btnStyle,
                   ),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      addLog("Limpando produtos...");
+                      await DatabaseHelper.instance.deleteProdutosWindows(
+                        addLog,
+                      );
+                      addLog("Produtos removidos com sucesso!");
+                      addLog("-=+=-");
+                    },
+                    icon: const Icon(Icons.delete, size: 24),
+                    label: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      child: Text(
+                        "Limpar Produtos",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    style: btnStyle,
+                  ),
                 ],
               ),
             ),
