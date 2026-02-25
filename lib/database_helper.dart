@@ -135,6 +135,7 @@ class DatabaseHelper {
     final db = await database;
     await db.transaction((txn) async {
       try {
+        await txn.execute('PRAGMA foreign_keys = OFF');
         logCallback("Deletando produtos...");
         await txn.delete('produto');
         logCallback("Produtos deletados com sucesso!");
@@ -146,6 +147,7 @@ class DatabaseHelper {
         logCallback("Deletando grupos...");
         await txn.delete('prod_grupo');
         logCallback("Grupos deletados com sucesso!");
+        await txn.execute('PRAGMA foreign_keys = ON');
       } catch (e, st) {
         logCallback("Erro ao deletar: $e");
         logCallback("Stacktrace: $st");
