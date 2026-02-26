@@ -104,9 +104,9 @@ class DatabaseHelper {
 
     if (result.isNotEmpty) {
       return {
-        'id_produto': result.first['id_produto'].toString(),
-        'data_hora_criado': result.first['data_hora_criado'].toString(),
-        'codigo_produto': result.first['codigo_produto'].toString(),
+        'id_produto': result.first['id_produto'],
+        'data_hora_criado': result.first['data_hora_criado'],
+        'codigo_produto': result.first['codigo_produto'],
       };
     }
     return null;
@@ -149,7 +149,7 @@ class DatabaseHelper {
 
       idProduto: prod?['id_produto'],
       dataCriado: prod?['data_hora_criado'],
-      codProduto: int.parse(prod?['codigo_produto']),
+      codProduto: int.tryParse(prod?['codigo_produto']?.toString() ?? ''),
     );
 
     if (prod != null) {

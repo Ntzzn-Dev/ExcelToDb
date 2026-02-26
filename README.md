@@ -46,3 +46,5 @@ Sinta-se à vontade para abrir issues ou sugerir melhorias!
 
 ## Log de versões
  - **v1.0** → Versão inicial, importação de XLSX e gerenciamento básico de produtos.
+
+Veja o log completo em (CHANGELOG.md)[CHANGELOG.md]
