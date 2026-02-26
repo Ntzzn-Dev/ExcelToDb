@@ -135,35 +135,19 @@ class DatabaseHelper {
     final db = await database;
     await db.transaction((txn) async {
       try {
-        await txn.execute('PRAGMA foreign_keys = OFF');
-        logCallback("Deletando produtos...");
         await txn.delete('produto');
         logCallback("Produtos deletados com sucesso!");
 
-        logCallback("Deletando subgrupos...");
         await txn.delete('prod_subgrupo');
         logCallback("Subgrupos deletados com sucesso!");
 
-        logCallback("Deletando grupos...");
         await txn.delete('prod_grupo');
         logCallback("Grupos deletados com sucesso!");
-        await txn.execute('PRAGMA foreign_keys = ON');
       } catch (e, st) {
         logCallback("Erro ao deletar: $e");
         logCallback("Stacktrace: $st");
-        rethrow; // opcional, se quiser propagar o erro
+        rethrow;
       }
     });
-  }
-
-  Future<void> deleteProdutosWindows(void Function(String) logCallback) async {
-    final db = await database;
-    try {
-      await db.delete('produto');
-      logCallback("produtos deletados com sucesso!");
-    } catch (e, st) {
-      logCallback("Erro ao deletar: $e");
-      logCallback("Stacktrace: $st");
-    }
   }
 }

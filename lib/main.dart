@@ -20,9 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Musync',
-      theme: lighttheme(),
-      darkTheme: darktheme(),
-      themeMode: ThemeMode.system,
+      theme: darktheme(),
       home: MyHomePage(title: 'Excel to db'),
     );
   }
@@ -174,28 +172,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () async {
                       addLog("Limpando produtos...");
                       await DatabaseHelper.instance.deleteProdutos(addLog);
-                      addLog("Produtos removidos com sucesso!");
-                      addLog("-=+=-");
-                    },
-                    icon: const Icon(Icons.delete, size: 24),
-                    label: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child: Text(
-                        "Limpar Produtos",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    style: btnStyle,
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      addLog("Limpando produtos...");
-                      await DatabaseHelper.instance.deleteProdutosWindows(
-                        addLog,
-                      );
                       addLog("Produtos removidos com sucesso!");
                       addLog("-=+=-");
                     },
