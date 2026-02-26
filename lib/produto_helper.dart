@@ -104,6 +104,9 @@ class ProdutoHelper {
   static Future<ProdutoHelper> create({
     required String descricao,
     required double precoVenda,
+    String? idProduto,
+    String? dataCriado,
+    int? codProduto,
     String? descricaoGp,
     String? descricaoUn,
     double? precoCusto,
@@ -127,8 +130,8 @@ class ProdutoHelper {
     );
 
     return ProdutoHelper._internal(
-      idProduto: createUUID(),
-      dataHoraCriado: createData(),
+      idProduto: idProduto ?? createUUID(),
+      dataHoraCriado: dataCriado ?? createData(),
       descricao: descricao,
       idProdUnidade: idProdUnidade,
       idProdGrupo: idProdGrupo,
@@ -137,7 +140,7 @@ class ProdutoHelper {
       precoVenda: precoVenda,
       qtdEstoque: qtdEstoque,
       margem: margemCalculada,
-      codigoProduto: codigoProduto,
+      codigoProduto: codProduto ?? codigoProduto,
       ncm: ncm,
       cest: cest,
     );

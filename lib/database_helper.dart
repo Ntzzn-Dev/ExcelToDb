@@ -94,6 +94,24 @@ class DatabaseHelper {
     return '';
   }
 
+  Future<Map<String, dynamic>?> searchCodigoProduto(String desc) async {
+    final db = await database;
+
+    final result = await db.rawQuery(
+      'SELECT id_produto, data_hora_criado, codigo_produto FROM produto WHERE descricao = ?',
+      [desc],
+    );
+
+    if (result.isNotEmpty) {
+      return {
+        'id_produto': result.first['id_produto'].toString(),
+        'data_hora_criado': result.first['data_hora_criado'].toString(),
+        'codigo_produto': result.first['codigo_produto'].toString(),
+      };
+    }
+    return null;
+  }
+
   Future<Map<String, dynamic>> createGrupo(String desc) async {
     final db = await database;
     final grupo = await GrupoHelper.create(descricao: desc);
@@ -107,7 +125,7 @@ class DatabaseHelper {
     return {'id_prod_subgrupo': idsubgp, 'id_prod_grupo': idgp};
   }
 
-  Future<void> createProduto({
+  Future<bool> createProduto({
     required String desc,
     required double precoVenda,
     String? descricaoGp,
@@ -118,6 +136,8 @@ class DatabaseHelper {
   }) async {
     final db = await database;
 
+    final prod = await searchCodigoProduto(desc);
+
     final produto = await ProdutoHelper.create(
       precoCusto: precoCusto,
       descricao: desc,
@@ -126,28 +146,39 @@ class DatabaseHelper {
       ncm: ncm,
       cest: cest,
       qtdEstoque: qtdEstoque,
+
+      idProduto: prod?['id_produto'],
+      dataCriado: prod?['data_hora_criado'],
+      codProduto: int.parse(prod?['codigo_produto']),
     );
 
-    await db.insert('produto', produto.toMap());
+    if (prod != null) {
+      reviveProdutos(produto);
+      return true;
+    } else {
+      await db.insert('produto', produto.toMap());
+      return false;
+    }
   }
 
-  Future<void> deleteProdutos(void Function(String) logCallback) async {
+  Future<void> reviveProdutos(ProdutoHelper prod) async {
     final db = await database;
     await db.transaction((txn) async {
-      try {
-        await txn.delete('produto');
-        logCallback("Produtos deletados com sucesso!");
+      await txn.update(
+        'produto',
+        prod.toMap(),
+        where: 'id_produto = ?',
+        whereArgs: [prod.idProduto],
+      );
+    });
+  }
 
-        await txn.delete('prod_subgrupo');
-        logCallback("Subgrupos deletados com sucesso!");
-
-        await txn.delete('prod_grupo');
-        logCallback("Grupos deletados com sucesso!");
-      } catch (e, st) {
-        logCallback("Erro ao deletar: $e");
-        logCallback("Stacktrace: $st");
-        rethrow;
-      }
+  Future<void> deleteProdutos() async {
+    final db = await database;
+    await db.transaction((txn) async {
+      await txn.update('produto', {
+        'data_hora_deletado': createData(),
+      }, where: 'data_hora_deletado IS NULL');
     });
   }
 }

@@ -171,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ElevatedButton.icon(
                     onPressed: () async {
                       addLog("Limpando produtos...");
-                      await DatabaseHelper.instance.deleteProdutos(addLog);
+                      await DatabaseHelper.instance.deleteProdutos();
                       addLog("Produtos removidos com sucesso!");
                       addLog("-=+=-");
                     },

@@ -20,12 +20,12 @@ class ExcelHelper {
 
       if (sheet == null) continue;
 
-      for (var row in sheet.rows) {
+      for (var row in sheet.rows.skip(1)) {
         final dados = row.map((cell) => cell?.value).toList();
 
         if (dados.length < 26) continue;
 
-        await DatabaseHelper.instance.createProduto(
+        final reinsert = await DatabaseHelper.instance.createProduto(
           desc: dados[2].toString(),
           descricaoGp: dados[3].toString(),
           precoCusto: double.tryParse(dados[4]?.toString() ?? '0') ?? 0,
@@ -35,7 +35,7 @@ class ExcelHelper {
           qtdEstoque: double.tryParse(dados[25]?.toString() ?? '0') ?? 0,
         );
         logCallback(
-          'inserindo: ${dados[2]} = R\$ ${(double.tryParse(dados[6]?.toString() ?? '0') ?? 0).toStringAsFixed(2).replaceAll('.', ',')}',
+          '${reinsert ? 'Reativando produto' : 'Inserindo produto'}: ${dados[2]} = R\$ ${(double.tryParse(dados[6]?.toString() ?? '0') ?? 0).toStringAsFixed(2).replaceAll('.', ',')}',
         );
       }
     }
